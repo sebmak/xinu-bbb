@@ -112,9 +112,14 @@ local process	startup(void)
 
 	/* Use DHCP to obtain an IP address and format it */
 
-	ipaddr = getlocalip();
+	// William Katsak:
+	// Work around trying to get an IP.
+	// We won't be connecting an Ethernet cable in most cases.
+	//ipaddr = getlocalip();
+	ipaddr = SYSERR;
 	if ((int32)ipaddr == SYSERR) {
-		kprintf("Cannot obtain an IP address\n");
+		//kprintf("Cannot obtain an IP address\n");
+		kprintf("Didn't try to obtain an IP address\n");
 	} else {
 		/* Print the IP in dotted decimal and hex */
 		ipaddr = NetData.ipucast;

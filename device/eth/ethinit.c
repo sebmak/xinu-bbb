@@ -227,7 +227,9 @@ int32	ethinit	(
 	retval = eth_phy_reset(csrptr->mdio, 0);
 	if(retval == SYSERR) {
 		kprintf("Cannot reset Ethernet PHY\n");
-		return SYSERR;
+		// William Katsak:
+		// We ignore a failure to initialize the Ethernet PHY here.
+		// return SYSERR;
 	}
 
 	retval = eth_phy_read(csrptr->mdio, ETH_PHY_CTLREG, 0, &phyreg);
