@@ -8,7 +8,7 @@
 #									#
 #########################################################################
 
-COMPILER_ROOT	=	../cross_compiler/bin/arm-none-eabi-
+COMPILER_ROOT	=	/usr/bin/arm-none-eabi-
 PNAME		=	bbb
 PLAT		=	Platform_$(PNAME)
 TOPDIR		=	..
