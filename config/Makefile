@@ -7,8 +7,8 @@ COMPILER_ROOT	=	/usr/bin/
 CC	= ${COMPILER_ROOT}gcc
 LEX	= ${COMPILER_ROOT}flex
 YACC	= ${COMPILER_ROOT}bison -y	# Flag enables yacc-compatible filenames
-CFLAGS	= 
-LFLAGS	= -lfl
+CFLAGS	=
+LFLAGS	= -ll
 
 #
 # Name of the configuration program

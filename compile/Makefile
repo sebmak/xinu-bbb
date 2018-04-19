@@ -8,7 +8,7 @@
 #									#
 #########################################################################
 
-COMPILER_ROOT	=	/usr/bin/arm-none-eabi-
+COMPILER_ROOT	=	/usr/local/bin/arm-none-eabi-
 PNAME		=	bbb
 PLAT		=	Platform_$(PNAME)
 TOPDIR		=	..
@@ -106,7 +106,7 @@ xinu:	Makefile rebuild $(BLDDIRS) $(DEFSFILE) $(DEPSFILE) $(CONFH) $(CONFC) $(LD
 	@$(OBJCOPY) -O binary $(XINU) $(XINUBIN)
 	@./uboot-tool/mkimage -A arm -O linux -T kernel -C none -a 0x81000000 -e 0x81000000 -d $(XINUBIN) $(XINUBOOT)
 
-$(BLDDIRS): 
+$(BLDDIRS):
 	@mkdir -p $(BLDDIRS)
 
 objects: $(LD_LIST)
@@ -142,7 +142,7 @@ clean:
 #--------------------------------------------------------------------------------
 # Locations of source directories and exceptions (.c and .[sS] files to exclude)
 #--------------------------------------------------------------------------------
-	
+
 $(DEFSFILE):
 	@rm -f $(DEFSFILE)
 	@echo "" > $(DEFSFILE)
