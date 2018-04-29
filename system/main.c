@@ -2,54 +2,22 @@
 
 #include <xinu.h>
 
-void alice();
-void bob();
-
-pid32 APid, BPid;
-sid32 asem, bsem, printmut;
-char	buf[SHELL_BUFLEN];
-
-void main(void)
+process	main(void)
 {
-	asem = semcreate(0);
-	bsem = semcreate(0);
-	printmut = semcreate(1);
 
-	APid = create(alice, 1024, 20, "Alice", 0);
-	BPid = create(bob,   1024, 40, "Bob",   0);
+	/* Run the Xinu shell */
 
-	resume(APid);
-	resume(BPid);
+	recvclr();
+	resume(create(shell, 8192, 50, "shell", 1, CONSOLE));
 
+	/* Wait for shell to exit and recreate it */
+
+	while (TRUE) {
+		receive();
+		sleepms(200);
+		kprintf("\n\nMain process recreating shell\n\n");
+		resume(create(shell, 4096, 20, "shell", 1, CONSOLE));
+	}
 	return OK;
-}
 
-void alice() {
-	wait(printmut);
-	kprintf("My first statement appears before Bob's second statement.\n");
-	signal(printmut);
-
-	signal(asem);
-	wait(bsem);
-
-	wait(printmut);
-	kprintf("This is Alice's second Statement\n");
-	signal(printmut);
-
-	kill(APid);
-}
-
-void bob() {
-	wait(printmut);
-	kprintf("My first statement appears before Alice's second statement.\n");
-	signal(printmut);
-
-	signal(bsem);
-	wait(asem);
-
-	wait(printmut);
-	kprintf("This is Bob's second Statement\n");
-	signal(printmut);
-
-	kill(BPid);
 }

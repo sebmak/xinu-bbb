@@ -18,3 +18,4 @@ config/y.tab.c
 system/conf.c
 include/conf.h
 .DS_Store
+compile/uboot-tool/mkimage
