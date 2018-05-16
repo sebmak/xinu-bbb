@@ -2,6 +2,8 @@
 
 #include <xinu.h>
 
+extern void reprioritize ();	/*  the reprioritize function	*/
+
 /*-----------------------------------------------------------------------
  * clkhandler - high level clock interrupt handler
  *-----------------------------------------------------------------------
@@ -9,7 +11,6 @@
 void	clkhandler()
 {
 
-	
 	volatile struct am335x_timer1ms *csrptr =
 			(struct am335x_timer1ms *)0x44E31000;
 			/* Set csrptr to address of timer CSR	    */
@@ -33,6 +34,9 @@ void	clkhandler()
 	if(count1000 >= 1000) {
 		clktime++;
 		count1000 = 0;
+
+		/* Also reprioritize */
+		reprioritize();
 	}
 
 	/* check if sleep queue is empty */

@@ -7,7 +7,7 @@
 #define SHELL_CMDSTK	8192		/* Size of stack for process	*/
 					/*    that executes command	*/
 #define	SHELL_ARGLEN	(SHELL_BUFLEN+SHELL_MAXTOK) /* Argument area	*/
-#define SHELL_CMDPRIO	20		/* Process priority for command	*/
+#define SHELL_CMDPRIO	30		/* Process priority for command	*/
 
 /* Message constants */
 

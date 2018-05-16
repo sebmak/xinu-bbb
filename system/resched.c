@@ -25,6 +25,7 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 	ptold = &proctab[currpid];
 
 	if (ptold->prstate == PR_CURR) {  /* Process remains eligible */
+		ptold->cpuusage = CPU_ALL;
 		if (ptold->prprio > firstkey(readylist)) {
 			return;
 		}
@@ -40,6 +41,9 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 	currpid = dequeue(readylist);
 	ptnew = &proctab[currpid];
 	ptnew->prstate = PR_CURR;
+	if (ptnew->cpuusage != CPU_ALL) {
+		ptnew->cpuusage = CPU_SOME;
+	}
 	preempt = QUANTUM;		/* Reset time slice for process	*/
 	ctxsw(&ptold->prstkptr, &ptnew->prstkptr);
 

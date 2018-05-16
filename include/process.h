@@ -4,7 +4,7 @@
 
 #ifndef NPROC
 #define	NPROC		8
-#endif		
+#endif
 
 /* Process state constants */
 
@@ -28,6 +28,10 @@
 #define	INITPRIO	20	/* Initial process priority		*/
 #define	INITRET		userret	/* Address to which process returns	*/
 
+#define CPU_NONE 0
+#define CPU_SOME 1
+#define CPU_ALL  2
+
 /* Inline code to check process ID (assumes interrupts are disabled)	*/
 
 #define	isbadpid(x)	( ((pid32)(x) < 0) || \
@@ -49,6 +53,8 @@ struct procent {		/* Entry in the process table		*/
 	char	prname[PNMLEN];	/* Process name				*/
 	sid32	prsem;		/* Semaphore on which process waits	*/
 	pid32	prparent;	/* ID of the creating process		*/
+	uint16 malleable; /* Whether the process priority is malleable */
+	uint16 cpuusage;      /* Whether the process had time on the CPU */
 	umsg32	prmsg;		/* Message sent to this process		*/
 	bool8	prhasmsg;	/* Nonzero iff msg is valid		*/
 	int16	prdesc[NDESC];	/* Device descriptors for process	*/
