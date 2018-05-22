@@ -429,6 +429,9 @@ extern	void	restore(intmask);
 /* in file resume.c */
 extern	pri16	resume(pid32);
 
+/* in file resumen.c */
+extern	pri16	resumen(int32, ...);
+
 /* in file rfsgetmode.c */
 extern	int32	rfsgetmode(char * );
 
