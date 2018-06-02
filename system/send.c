@@ -15,27 +15,20 @@ syscall	send(
 	struct	procent *prptr;		/* Ptr to process's table entry	*/
 
 	mask = disable();
-	if (isbadpid(pid)) {
-		restore(mask);
+	if (add_message(pid, msg) == SYSERR) {
 		return SYSERR;
 	}
 
 	prptr = &proctab[pid];
-	if (prptr->prhasmsg) {
-		restore(mask);
-		return SYSERR;
-	}
-	prptr->prmsg = msg;		/* Deliver message		*/
-	prptr->prhasmsg = TRUE;		/* Indicate message is waiting	*/
 
 	/* If recipient waiting or in timed-wait make it ready */
-
 	if (prptr->prstate == PR_RECV) {
 		ready(pid);
 	} else if (prptr->prstate == PR_RECTIM) {
 		unsleep(pid);
 		ready(pid);
 	}
+
 	restore(mask);		/* Restore interrupts */
 	return OK;
 }

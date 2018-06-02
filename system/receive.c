@@ -13,13 +13,12 @@ umsg32	receive(void)
 	umsg32	msg;			/* Message to return		*/
 
 	mask = disable();
-	prptr = &proctab[currpid];
-	if (prptr->prhasmsg == FALSE) {
+
+	while ((msg = get_message(pid)) == NULL) {
 		prptr->prstate = PR_RECV;
 		resched();		/* Block until message arrives	*/
 	}
-	msg = prptr->prmsg;		/* Retrieve message		*/
-	prptr->prhasmsg = FALSE;	/* Reset message flag		*/
+
 	restore(mask);
 	return msg;
 }

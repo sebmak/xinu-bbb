@@ -2,6 +2,7 @@
 
 #include <kernel.h>
 #include <conf.h>
+#include <message.h>
 #include <process.h>
 #include <queue.h>
 #include <resched.h>
