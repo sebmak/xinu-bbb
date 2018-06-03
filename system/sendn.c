@@ -1,24 +1,35 @@
-/* send.c - send */
+/* sendn.c - sendn */
 
 #include <xinu.h>
+#include <stdarg.h>
 
 /*------------------------------------------------------------------------
- *  send  -  Pass a message to a process and start recipient if waiting
+ *  sendn  -  Pass multiple messages to a process and start recipient if waiting
  *------------------------------------------------------------------------
  */
-syscall	send(
+syscall	sendn(
 	  pid32		pid,		/* ID of recipient process	*/
-	  umsg32	msg		/* Contents of message		*/
+	  int32	count,		/* number of messages */
+		...             /* messages */
 	)
 {
 	intmask	mask;			/* Saved interrupt mask		*/
 	struct	procent *prptr;		/* Ptr to process's table entry	*/
+	umsg32 currmsg;
+	int i;
+
+	va_list args;
 
 	mask = disable();
-	if (add_message(pid, msg) == SYSERR) {
-		restore(mask);
-		return SYSERR;
+	va_start(args, count);
+	for (i = 0; i < count; ++i) {
+		currmsg = va_arg(args, umsg32);
+		if (add_message(pid, currmsg) == SYSERR) {
+			restore(mask);
+			return SYSERR;
+		}
 	}
+	va_end(args);
 
 	prptr = &proctab[pid];
 

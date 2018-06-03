@@ -14,7 +14,8 @@ umsg32	receive(void)
 
 	mask = disable();
 
-	while ((msg = get_message(pid)) == NULL) {
+	prptr = &proctab[currpid];
+	while ((msg = get_message(currpid)) == NULL) {
 		prptr->prstate = PR_RECV;
 		resched();		/* Block until message arrives	*/
 	}

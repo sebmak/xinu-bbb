@@ -21,7 +21,7 @@ umsg32 get_message(pid32 pid) {
     m = prptr->prmsg; //Get first message
     msg = m->message; //Set the return message to the message value of m
     prptr->prmsg = m->next; //Set prmsg to the next message.
-    free(m); //Delete the Message m.
+    freemem((char *)m, sizeof(struct Message)); //Delete the Message m.
   }
 
   if (prptr->prmsg == NULL) {
@@ -50,7 +50,7 @@ status add_message(pid32 pid, umsg32 message) {
   prptr = &proctab[pid];
 
   //Create the new message
-  new_msg = (struct Message*)malloc(sizeof(struct Message));
+  new_msg = (struct Message*)getmem(sizeof(struct Message));
   new_msg->message = message;
   new_msg->next = NULL;
 
@@ -62,8 +62,8 @@ status add_message(pid32 pid, umsg32 message) {
     i = 1; //Set the message counter to 1
     while (cur_msg->next != NULL) {
       cur_msg = cur_msg->next; //Get the next message in the list
-      if (++i > NMSG) { //If there is currently more messages in the list than NMSG throw error
-        free(new_msg); //Free memory for new message
+      if (++i >= NMSG) { //If there is currently more messages in the list than NMSG throw error
+        freemem((char *)new_msg, sizeof(struct Message)); //Free memory for new message
         return SYSERR;
       }
     }

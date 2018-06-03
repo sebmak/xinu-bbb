@@ -22,23 +22,20 @@ umsg32	recvtime(
 	/* Schedule wakeup and place process in timed-receive state */
 
 	prptr = &proctab[currpid];
-	if (prptr->prhasmsg == FALSE) {	/* Delay if no message waiting	*/
+	if ((msg = get_message(currpid)) == NULL) {
 		if (insertd(currpid,sleepq,maxwait) == SYSERR) {
 			restore(mask);
 			return SYSERR;
 		}
+
 		prptr->prstate = PR_RECTIM;
 		resched();
 	}
 
-	/* Either message arrived or timer expired */
-
-	if (prptr->prhasmsg) {
-		msg = prptr->prmsg;	/* Retrieve message		*/
-		prptr->prhasmsg = FALSE;/* Reset message indicator	*/
-	} else {
+	if ((msg = get_message(currpid)) == NULL) {
 		msg = TIMEOUT;
 	}
+
 	restore(mask);
 	return msg;
 }
