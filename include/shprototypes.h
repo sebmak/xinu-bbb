@@ -70,5 +70,8 @@ extern	shellcmd  xsh_udpeserver (int32, char *[]);
 /* in file xsh_uptime.c */
 extern	shellcmd  xsh_uptime	(int32, char *[]);
 
+/* in file xsh_lab5.c */
+extern	shellcmd  xsh_lab5	(int32, char *[]);
+
 /* in file xsh_help.c */
 extern	shellcmd  xsh_help	(int32, char *[]);
