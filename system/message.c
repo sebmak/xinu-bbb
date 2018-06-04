@@ -24,7 +24,7 @@ umsg32 get_message(pid32 pid) {
     freemem((char *)m, sizeof(struct Message)); //Delete the Message m.
   }
 
-  if (prptr->prmsg == NULL) {
+  if (prptr->prmsg != NULL) {
     prptr->prhasmsg = TRUE;
   } else {
     prptr->prhasmsg = FALSE;
@@ -70,7 +70,7 @@ status add_message(pid32 pid, umsg32 message) {
     cur_msg->next = new_msg; //Add the new message to the message list
   }
 
-  if (prptr->prmsg == NULL) {
+  if (prptr->prmsg != NULL) {
     prptr->prhasmsg = TRUE;
   } else {
     prptr->prhasmsg = FALSE;
