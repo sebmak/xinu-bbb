@@ -32,8 +32,10 @@ syscall	ptcreate(
 		ptptr= &porttab[ptnum];
 		if (ptptr->ptstate == PT_FREE) {
 			ptptr->ptstate = PT_ALLOC;
-			ptptr->ptssem = semcreate(count);
-			ptptr->ptrsem = semcreate(0);
+			ptptr->ptqueue = newqueue();
+			ptptr->ptwaitmut = semcreate(1);
+			// ptptr->ptssem = semcreate(count);
+			// ptptr->ptrsem = semcreate(0);
 			ptptr->pthead = ptptr->pttail = NULL;
 			ptptr->ptseq++;
 			ptptr->ptmaxcnt = count;

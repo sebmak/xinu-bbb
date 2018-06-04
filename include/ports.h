@@ -8,15 +8,24 @@
 
 struct	ptnode	{			/* Node on list of messages 	*/
 	uint32	ptmsg;			/* A one-word message		*/
+	uint16  tag;        /* A message tag */
 	struct	ptnode	*ptnext;	/* Pointer to next node on list	*/
 };
 
+struct ptwaittag {
+	pid32  pid;
+	uint16 tag;
+	struct ptwaittag * next;
+	struct ptwaittag * prev;
+}
+
 struct	ptentry	{			/* Entry in the port table	*/
-	sid32	ptssem;			/* Sender semaphore		*/
-	sid32	ptrsem;			/* Receiver semaphore		*/
+	// sid32	ptssem;			  /* Sender semaphore		*/
+	// sid32	ptrsem;			  /* Receiver semaphore		*/
+	struct  ptwaittag  *ptwaitqueue;
 	uint16	ptstate;		/* Port state (FREE/LIMBO/ALLOC)*/
 	uint16	ptmaxcnt;		/* Max messages to be queued	*/
-	int32	ptseq;			/* Sequence changed at creation	*/
+	int32	  ptseq;			/* Sequence changed at creation	*/
 	struct	ptnode	*pthead;	/* List of message pointers	*/
 	struct	ptnode	*pttail;	/* Tail of message list		*/
 };

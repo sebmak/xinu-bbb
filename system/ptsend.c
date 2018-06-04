@@ -8,7 +8,8 @@
  */
 syscall	ptsend(
 	  int32		portid,		/* ID of port to use		*/
-	  umsg32	msg		/* Message to send		*/
+	  umsg32	msg,		/* Message to send		*/
+		uint16 tag /* tag for message */
 	)
 {
 	intmask	mask;			/* Saved interrupt mask		*/

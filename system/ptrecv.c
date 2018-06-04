@@ -7,7 +7,8 @@
  *------------------------------------------------------------------------
  */
 uint32	ptrecv(
-	  int32		portid		/* ID of port to use		*/
+	  int32		portid,		/* ID of port to use		*/
+		uint16 tag        /* tag for message */
 	)
 {
 	intmask	mask;			/* Saved interrupt mask		*/
@@ -26,23 +27,32 @@ uint32	ptrecv(
 	/* Wait for message and verify that the port is still allocated */
 
 	seq = ptptr->ptseq;		/* Record orignal sequence	*/
-	if (wait(ptptr->ptrsem) == SYSERR || ptptr->ptstate != PT_ALLOC
-	    || ptptr->ptseq != seq) {
-		restore(mask);
-		return (uint32)SYSERR;
-	}
+	// if (wait(ptptr->ptrsem) == SYSERR || ptptr->ptstate != PT_ALLOC
+	//     || ptptr->ptseq != seq) {
+	// 	restore(mask);
+	// 	return (uint32)SYSERR;
+	// }
+
+	//Find first message that matches tag
+
+	//Else queue the process and wait.
+
 
 	/* Dequeue first message that is waiting in the port */
 
-	msgnode = ptptr->pthead;
-	msg = msgnode->ptmsg;
-	if (ptptr->pthead == ptptr->pttail)	/* Delete last item	*/
-		ptptr->pthead = ptptr->pttail = NULL;
-	else
-		ptptr->pthead = msgnode->ptnext;
-	msgnode->ptnext = ptfree;		/* Return to free list	*/
-	ptfree = msgnode;
-	signal(ptptr->ptssem);
+	// msgnode = ptptr->pthead;
+	// msg = msgnode->ptmsg;
+	// if (ptptr->pthead == ptptr->pttail)	/* Delete last item	*/
+	// 	ptptr->pthead = ptptr->pttail = NULL;
+	// else
+	// 	ptptr->pthead = msgnode->ptnext;
+	// msgnode->ptnext = ptfree;		/* Return to free list	*/
+	// ptfree = msgnode;
+	// signal(ptptr->ptssem);
+
+
+
+
 	restore(mask);
 	return msg;
 }
