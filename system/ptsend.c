@@ -28,7 +28,7 @@ syscall	ptsend(
 	/* Wait for space and verify port has not been reset */
 
 	seq = ptptr->ptseq;		/* Record original sequence	*/
-	if (wait(ptptr->ptssem) == SYSERR
+	if (wait(ptptr->ptmsem) == SYSERR
 	    || ptptr->ptstate != PT_ALLOC
 	    || ptptr->ptseq != seq) {
 		restore(mask);
@@ -44,9 +44,48 @@ syscall	ptsend(
 	ptfree  = msgnode->ptnext;	/* Unlink from the free list	*/
 	msgnode->ptnext = NULL;		/* Set fields in the node	*/
 	msgnode->ptmsg  = msg;
+	msgnode->tag    = tag;
 
 	/* Link into queue for the specified port */
+	struct ptwaittag *curr = NULL, *prev = NULL;
+	//Check if a waiting process matches the tag
+	curr = ptptr->ptwaithead;
 
+	//There is atleast 1 waiting process
+	if (curr != NULL) {
+		wait (ptptr->ptwaitmut);
+		//There is only 1 waiting process
+		if (curr->next == NULL) {
+			if (curr->tag == tag || curr->tag == 0 || tag == 0) {
+				curr->ptmsg = msg;
+				ptptr->ptwaithead = NULL;
+				signal(ptptr->ptwaitmut);
+				resume(curr->pid);
+				restore(mask);
+				return OK;
+			}
+		}
+		while (curr->next != NULL) {
+			if (curr->tag == tag || curr->tag == 0 || tag == 0) {
+				curr->ptmsg = msg;
+				//Is first element in list
+				if (prev == NULL) {
+					ptptr->ptwaithead = curr->next;
+				} else {
+					prev->next = curr->next;
+				}
+				signal(ptptr->ptwaitmut);
+				resume(curr->pid);
+				restore(mask);
+				return OK;
+			}
+			prev = curr;
+			curr = curr->next;
+		}
+		signal(ptptr->ptwaitmut);
+	}
+
+	//Else queue the message
 	tailnode = ptptr->pttail;
 	if (tailnode == NULL) {		/* Queue for port was empty	*/
 		ptptr->pttail = ptptr->pthead = msgnode;
@@ -54,7 +93,8 @@ syscall	ptsend(
 		tailnode->ptnext = msgnode;
 		ptptr->pttail = msgnode;
 	}
-	signal(ptptr->ptrsem);
+
+	signal(ptptr->ptmsem);
 	restore(mask);
 	return OK;
 }

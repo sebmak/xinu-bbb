@@ -39,12 +39,14 @@ void	_ptclear(
 
 	if (newstate == PT_ALLOC) {
 		ptptr->pttail = ptptr->pthead = NULL;
-		semreset(ptptr->ptssem, ptptr->ptmaxcnt);
-		semreset(ptptr->ptrsem, 0);
-	} else {
-		semdelete(ptptr->ptssem);
-		semdelete(ptptr->ptrsem);
 	}
+
+	struct ptwaittag *curr;
+	for (curr = ptptr->ptwaithead; curr != NULL; curr = curr->next) {
+		resume(curr->pid);
+	}
+	ptptr->ptwaithead = NULL;
+
 	ptptr->ptstate = newstate;
 	return;
 }

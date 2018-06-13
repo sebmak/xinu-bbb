@@ -7,7 +7,7 @@
 #define	PT_ALLOC	3		/* Port is allocated		*/
 
 struct	ptnode	{			/* Node on list of messages 	*/
-	uint32	ptmsg;			/* A one-word message		*/
+	umsg32	ptmsg;			/* A one-word message		*/
 	uint16  tag;        /* A message tag */
 	struct	ptnode	*ptnext;	/* Pointer to next node on list	*/
 };
@@ -15,14 +15,14 @@ struct	ptnode	{			/* Node on list of messages 	*/
 struct ptwaittag {
 	pid32  pid;
 	uint16 tag;
+	umsg32 ptmsg;
 	struct ptwaittag * next;
-	struct ptwaittag * prev;
-}
+};
 
 struct	ptentry	{			/* Entry in the port table	*/
-	// sid32	ptssem;			  /* Sender semaphore		*/
-	// sid32	ptrsem;			  /* Receiver semaphore		*/
-	struct  ptwaittag  *ptwaitqueue;
+	sid32	  ptmsem;			  /* Message semaphore		*/
+	sid32   ptwaitmut;
+	struct 	ptwaittag *ptwaithead;
 	uint16	ptstate;		/* Port state (FREE/LIMBO/ALLOC)*/
 	uint16	ptmaxcnt;		/* Max messages to be queued	*/
 	int32	  ptseq;			/* Sequence changed at creation	*/

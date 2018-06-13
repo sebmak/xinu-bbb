@@ -346,13 +346,13 @@ extern	syscall	ptdelete(int32, int32 (*)(int32));
 extern	syscall	ptinit(int32);
 
 /* in file ptrecv.c */
-extern	uint32	ptrecv(int32);
+extern	uint32	ptrecv(int32, uint16);
 
 /* in file ptreset.c */
 extern	syscall	ptreset(int32, int32 (*)(int32));
 
 /* in file ptsend.c */
-extern	syscall	ptsend(int32, umsg32);
+extern	syscall	ptsend(int32, umsg32, uint16);
 
 /* in file putc.c */
 extern	syscall	putc(did32, char);

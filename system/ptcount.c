@@ -17,28 +17,20 @@ int32	ptcount(
 {
 	intmask	mask;			/* Saved interrupt mask		*/
 	int32	count;			/* Count of messages available	*/
-	int32	sndcnt;			/* Count of sender semaphore	*/
 	struct	ptentry	*ptptr;		/* Pointer to port table entry	*/
 
 	mask = disable();
 	if ( isbadport(portid) ||
 		(ptptr= &porttab[portid])->ptstate != PT_ALLOC ) {
+			kprintf("Cannot find port\n");
 			restore(mask);
 			return SYSERR;
 	}
 
 	/* Get count of messages available */
 
-	count = semcount(ptptr->ptrsem);
+	count = semcount(ptptr->ptmsem);
 
-	/* If messages are waiting, check for blocked senders */
-
-	if (count >= 0) {
-		sndcnt = semcount(ptptr->ptssem);
-		if (sndcnt < 0) {	/* -sndcnt senders blocked */
-			count += -sndcnt;
-		}
-	}
 	restore(mask);
 	return count;
 }
