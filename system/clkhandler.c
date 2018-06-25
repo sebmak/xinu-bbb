@@ -9,7 +9,6 @@
 void	clkhandler()
 {
 
-	
 	volatile struct am335x_timer1ms *csrptr =
 			(struct am335x_timer1ms *)0x44E31000;
 			/* Set csrptr to address of timer CSR	    */
@@ -45,6 +44,12 @@ void	clkhandler()
 		if((--queuetab[firstid(sleepq)].qkey) == 0) {
 
 			wakeup();
+		}
+	}
+
+	if (callout_list != NULL) {
+		if (callout_list->time <= (clktime*1000)+count1000) {
+			run_callouts();
 		}
 	}
 
